@@ -8,6 +8,7 @@ import re
 import xml.etree.ElementTree as ET
 
 CACERT = r'./ca.crt'
+auth = ('admin@internal', 'Xlj#!1125')
 headers = {
     'Version':  '4',
     'Accept':   'application/xml',
@@ -26,9 +27,7 @@ def get_API():
     """
     # 请求内容
     response_get_API = requests.get('https://billing-app-012/ovirt-engine/api',
-                                    headers=headers, auth=(
-                                        'admin@internal', 'Xlj#!1125'),
-                                    verify=CACERT)
+                                    headers=headers, auth=auth, verify=CACERT)
     data = response_get_API.text
     # print(data)
 
@@ -57,8 +56,7 @@ def get_DATA_CENTER():
     # requests
     response_get_DATA_CENTER = requests.get(
         'https://billing-app-012/ovirt-engine/api/datacenters',
-        headers=headers, auth=('admin@internal', 'Xlj#!1125'),
-        verify=CACERT)
+        headers=headers, auth=auth, verify=CACERT)
     data = response_get_DATA_CENTER.text
     # print(data)
 
@@ -81,8 +79,7 @@ def get_HOST():
     """
     response_get_HOST = requests.get(
         'https://billing-app-012/ovirt-engine/api/hosts',
-        headers=headers, auth=('admin@internal', 'Xlj#!1125'),
-        verify=CACERT)
+        headers=headers, auth=auth, verify=CACERT)
     data = response_get_HOST.text
     # print(data)
 
@@ -115,9 +112,7 @@ def get_STOREAGEDOMAINS():
     """
     response_get_storeagedomains = requests.get(
         'https://billing-app-012/ovirt-engine/api/storagedomains',
-        headers=headers, auth=('admin@internal', 'Xlj#!1125'),
-        verify=CACERT
-    )
+        headers=headers, auth=auth, verify=CACERT)
     data = response_get_storeagedomains.text
     # print(data)
 
@@ -157,8 +152,7 @@ def get_ISO_id(iso_storeagedomains):
     url_iso = 'https://billing-app-012/ovirt-engine/api/storagedomains/' + \
         iso_storeagedomains + '/disks'
     # print(url_iso)
-    response_get_ISO_id = requests.get(url=url_iso, headers=headers, auth=('admin@internal', 'Xlj#!1125'), verify=CACERT
-                                       )
+    response_get_ISO_id = requests.get(url=url_iso, headers=headers, auth=auth, verify=CACERT)
     data = response_get_ISO_id.text
     # 此处的data会返回所有的磁盘与存储的id内容
     # print(data)
@@ -187,8 +181,8 @@ def main():
     print(id)
 
     # 获取data center的HOST相关信息
-    print(
-        "\n==========HOST infomation:\n[HOST_id, HOST_address, HOST_name, HOST_comment]:")
+    print("\n==========HOST infomation:\n \
+        [HOST_id, HOST_address, HOST_name, HOST_comment]:")
     get_HOST()
     for i in range(len(get_HOST())):
         print(get_HOST()[i])
@@ -196,14 +190,13 @@ def main():
         # print(get_HOST()[i][0])
 
     # 获取iso的storeagedomains
-    print(
-        "\n==========iso storeagedomains id: \n[STOREAGEDOMAINS_id, STOREAGEDOMAINS_name, STOREAGEDOMAINS_description]")
+    print("\n==========iso storeagedomains id: \n \
+        [STOREAGEDOMAINS_id, STOREAGEDOMAINS_name, STOREAGEDOMAINS_description]")
     for i in range(len(get_STOREAGEDOMAINS())):
         print(get_STOREAGEDOMAINS()[i])
 
     # 此处取ISO的值
     print("\n==========iso id:")
-    # 需要修改为自动读取ISO的domains值吗？
     iso_storeagedomains = get_STOREAGEDOMAINS()[1][0]
     print("Using domains id:\t" + iso_storeagedomains)
     get_ISO_id(iso_storeagedomains)
